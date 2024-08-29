@@ -1,0 +1,17 @@
+ament_copyright==0.12.10
+ament_flake8==0.12.10
+ament_index_python==1.4.0
+ament_pep257==0.12.10
+matplotlib==3.5.1
+numpy==1.21.5
+Pillow==9.0.1
+Pillow==10.4.0
+PyQt5==5.15.11
+PyQt5_sip==12.9.1
+pyserial==3.5
+pytest==6.2.5
+rclpy==3.3.12
+Requests==2.32.3
+setuptools==58.2.0
+setuptools==59.6.0
+std_msgs==4.2.3

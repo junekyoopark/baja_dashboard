@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from px4_msgs.msg import VehicleGlobalPosition
+from std_msgs.msg import Int32  # Import the Int32 message type for lap count
 import numpy as np
 import csv
 from math import radians, cos, sin, sqrt, atan2
@@ -40,6 +41,14 @@ class LapCounterNode(Node):
             self.gps_callback,
             qos_profile
         )
+
+        # Create a publisher for the lap count
+        self.lap_count_publisher = self.create_publisher(
+            Int32,
+            '/lap_count',
+            qos_profile
+        )
+
         self.get_logger().info('LapCounterNode has been started.')
 
     def load_reference_path(self, filepath):
@@ -84,6 +93,11 @@ class LapCounterNode(Node):
                 self.lap_count += 1
                 self.get_logger().info(f'Lap {self.lap_count} completed!')
                 self.target_index = 0
+
+                # Publish the new lap count
+                lap_count_msg = Int32()
+                lap_count_msg.data = self.lap_count
+                self.lap_count_publisher.publish(lap_count_msg)
 
             self.target_position = self.reference_path[self.target_index]
 

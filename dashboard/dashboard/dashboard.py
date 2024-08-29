@@ -10,6 +10,7 @@ import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
 from px4_msgs.msg import VehicleGlobalPosition, SensorCombined
+from std_msgs.msg import Int32
 import canusb
 
 # Initialize global variables
@@ -17,6 +18,7 @@ lat = 0.0
 lon = 0.0
 lat_g = 0.0
 lon_g = 0.0
+lap_count = 0
 
 class GGDiagramCanvas(FigureCanvas):
     def __init__(self, parent=None):
@@ -216,16 +218,15 @@ class MainWindow(QMainWindow):
 
     def update_telemetry(self):
         """Update the telemetry data in the UI."""
-        global lat_g, lon_g
-        # Random data for demo purposes, replace with actual data updates
+        global lat_g, lon_g, lap_count
         
         # Update the g-g diagram
         self.gg_canvas.plot(lat_g, lon_g)
+        lap = lap_count
 
         with canusb.var_lock:
             speed = canusb.speed_rpm
             battery = canusb.bus_voltage
-        lap = random.randint(1, 10)
 
         # Update labels
         self.speed_value_label.setText(f"{speed:.2f}")
@@ -246,6 +247,7 @@ class TelemetryNode(Node):
         )
         self.create_subscription(VehicleGlobalPosition, '/fmu/out/vehicle_global_position', self.lat_lon_callback, qos_profile)
         self.create_subscription(SensorCombined, '/fmu/out/sensor_combined', self.g_g_callback, qos_profile)
+        self.create_subscription(Int32, '/lap_count', self.lap_count_callback, qos_profile)
 
     def lat_lon_callback(self, msg):
         global lat 
@@ -260,6 +262,11 @@ class TelemetryNode(Node):
         lat_g = msg.accelerometer_m_s2[1]
         lon_g = msg.accelerometer_m_s2[0]
         self.get_logger().info('Current lat_g: %.6f' % msg.accelerometer_m_s2[1])
+
+    def lap_count_callback(self, msg):
+        global lap_count
+        lap_count = msg.data
+        self.get_logger().info('Current lap: %d' % msg.data)
 
 def main(args=None):
     # Initialize ROS2 only once

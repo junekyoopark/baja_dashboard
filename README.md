@@ -12,8 +12,6 @@ SUBSYSTEM=="tty", ATTRS{idProduct}=="7523", ATTRS{idVendor}=="1a86", SYMLINK+="t
 `99-pixhawk.rules`
 SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", SYMLINK+="ttyPixhawk4"
 
-
-
 You also need to source the environment (for ROS2 and the ROS2 package here. If you are lazy, you can add them to ~/.bashrc)
 
 Usage

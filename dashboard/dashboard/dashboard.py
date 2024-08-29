@@ -229,8 +229,8 @@ class MainWindow(QMainWindow):
             battery = canusb.bus_voltage
 
         # Update labels
-        self.speed_value_label.setText(f"{speed:.2f}")
-        self.battery_value_label.setText(f"{battery}")
+        self.speed_value_label.setText(f"{speed:.0f}")
+        self.battery_value_label.setText(f"{battery:.0f}")
         self.lap_label.setText(f"LAP {lap}")
 
         
